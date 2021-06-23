@@ -11,16 +11,17 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
+const Factory = use('Factory')
 const seeders = [
-  use('./UserSeeder'),
-  use('./PostSeeder'),
-  use('./CommentSeeder')
+  require('./UserSeeder'),
+  require('./PostSeeder'),
+  require('./CommentSeeder')
 ]
 
 class DatabaseSeeder {
   async run () {
     for (const seeder of seeders) {
-      const source = seeder()
+      const source = new seeder()
       await source.run()
     }
   }

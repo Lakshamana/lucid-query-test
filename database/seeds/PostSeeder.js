@@ -18,10 +18,10 @@ class PostSeeder {
   async run () {
     const users = await User.all()
 
-    for (const user of users) {
-      const posts = Factory
+    for (const user of users.rows) {
+      const posts = await Factory
         .model('App/Models/Post')
-        .createMany(3)
+        .makeMany(3)
 
       await user.posts().saveMany(posts)
     }

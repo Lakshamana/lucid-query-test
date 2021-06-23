@@ -13,16 +13,24 @@
 /** @type {import('@adonisjs/lucid/src/Factory')} */
 const Factory = use('Factory')
 const Post = use('App/Models/Post')
+const User = use('App/Models/User')
+const { randomInt } = use('App/Helpers')
 
 class CommentSeeder {
   async run () {
     const posts = await Post.all()
 
-    for (const post of posts) {
-      const comments = Factory
+    for (const post of posts.rows) {
+      const comments = await Factory
         .model('App/Models/Comment')
-        .createMany(10)
-
+        .makeMany(10)
+      
+      const users = await User.all()
+      for (const comment of comments) {
+        const randomIndex = randomInt(0, 9)
+        comment.author_id = users.rows[randomIndex].id
+      }
+    
       await post.comments().saveMany(comments)
     }
   }
